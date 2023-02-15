@@ -1,57 +1,62 @@
-﻿public class VigenereCipher
+﻿using System.Diagnostics;
+
+public class Programm
 {
-    const string defaultAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ";
-    readonly string letters;
-
-    public VigenereCipher(string alphabet = null)
+    public class VigenereCipher
     {
-        letters = string.IsNullOrEmpty(alphabet) ? defaultAlphabet : alphabet;
-    }
+        const string defaultAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ";
+        readonly string letters;
 
-    //генерация повторяющегося пароля
-    private string GetRepeatKey(string s, int n)
-    {
-        var p = s;
-        while (p.Length < n)
+        public VigenereCipher(string alphabet = null)
         {
-            p += p;
+            letters = string.IsNullOrEmpty(alphabet) ? defaultAlphabet : alphabet;
         }
 
-        return p.Substring(0, n);
-    }
-
-    private string Vigenere(string text, string password, bool encrypting = true)
-    {
-        var gamma = GetRepeatKey(password, text.Length);
-        var retValue = "";
-        var q = letters.Length;
-
-        for (int i = 0; i < text.Length; i++)
+        //генерация повторяющегося пароля
+        private string GetRepeatKey(string s, int n)
         {
-            var letterIndex = letters.IndexOf(text[i]);
-            var codeIndex = letters.IndexOf(gamma[i]);
-            if (letterIndex < 0)
+            var p = s;
+            while (p.Length < n)
             {
-                //если буква не найдена, добавляем её в исходном виде
-                retValue += text[i].ToString();
+                p += p;
             }
-            else
-            {
-                retValue += letters[(q + letterIndex + ((encrypting ? 1 : -1) * codeIndex)) % q].ToString();
-            }
+
+            return p.Substring(0, n);
         }
 
-        return retValue;
+        private string Vigenere(string text, string password, bool encrypting = true)
+        {
+
+            var gamma = GetRepeatKey(password, text.Length);
+            var retValue = "";
+            var q = letters.Length;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                var letterIndex = letters.IndexOf(text[i]);
+                var codeIndex = letters.IndexOf(gamma[i]);
+                if (letterIndex < 0)
+                {
+                    //если буква не найдена, добавляем её в исходном виде
+                    retValue += text[i].ToString();
+                }
+                else
+                {
+                    retValue += letters[(q + letterIndex + ((encrypting ? 1 : -1) * codeIndex)) % q].ToString();
+                }
+            }
+
+            return retValue;
+        }
+
+        //шифрование текста
+        public string Encrypt(string plainMessage, string password)
+            => Vigenere(plainMessage, password);
+
+        //дешифрование текста
+        public string Decrypt(string encryptedMessage, string password)
+            => Vigenere(encryptedMessage, password, false);
     }
-
-    //шифрование текста
-    public string Encrypt(string plainMessage, string password)
-        => Vigenere(plainMessage, password);
-
-    //дешифрование текста
-    public string Decrypt(string encryptedMessage, string password)
-        => Vigenere(encryptedMessage, password, false);
-}
     public class CaesarCipher
     {
         const string defaultAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ";
@@ -88,27 +93,39 @@
     }
 
 
-class Program
-{
-    static void Main(string[] args)
+    class Program
     {
-        var cipher = new VigenereCipher("AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ");
-        var cipherCes = new CaesarCipher();
-        var password = "BEZPIECZEŃSTWO";
-        Console.Write("Шифр Виженера\n\n");
-        Console.Write("Ключ: " + password + "\n");
-        Console.Write("Введите текст: ");
-        var inputText = Console.ReadLine().ToUpper();
-        var encryptedText = cipher.Encrypt(inputText, password);
-        Console.WriteLine("Зашифрованное сообщение: {0}", encryptedText);
-        Console.WriteLine("Расшифрованное сообщение: {0}", cipher.Decrypt(encryptedText, password), "\n");
-        Console.Write("-----------------------------------------------\n");
-        Console.Write("Шифр на основе соотношений (Цезаря, k = 20)\n\n");
-        Console.Write("Введите текст: ");
-        var message = Console.ReadLine().ToUpper();
-        int secretKey = 20;
-        var encryptedText2 = cipherCes.Encrypt(message, secretKey);
-        Console.WriteLine("Зашифрованное сообщение: {0}", encryptedText2);
-        Console.WriteLine("Расшифрованное сообщение: {0}", cipherCes.Decrypt(encryptedText2, secretKey));
+        static void Main(string[] args)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatchCes = new Stopwatch();
+            var cipher = new Programm.VigenereCipher("AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ");
+            var cipherCes = new Programm.CaesarCipher();
+            var password = "BEZPIECZEŃSTWO";
+            Console.Write("Шифр Виженера\n\n");
+            Console.Write("Ключ: " + password + "\n");
+            Console.Write("Введите текст: ");
+            var inputText = Console.ReadLine().ToUpper();
+            stopwatch.Start();
+            var encryptedText = cipher.Encrypt(inputText, password);
+            Console.WriteLine("Зашифрованное сообщение: {0}", encryptedText);
+            Console.WriteLine("Расшифрованное сообщение: {0}", cipher.Decrypt(encryptedText, password), "\n");
+            stopwatch.Stop();
+            float vij = stopwatch.ElapsedMilliseconds;
+            Console.Write("-----------------------------------------------\n");
+            Console.Write("Шифр на основе соотношений (Цезаря, k = 20)\n\n");
+            Console.Write("Введите текст: ");
+            var message = Console.ReadLine().ToUpper();
+            int secretKey = 20;
+            stopwatchCes.Start();
+            var encryptedText2 = cipherCes.Encrypt(message, secretKey);
+            Console.WriteLine("Зашифрованное сообщение: {0}", encryptedText2);
+            Console.WriteLine("Расшифрованное сообщение: {0}", cipherCes.Decrypt(encryptedText2, secretKey), "\n");
+            stopwatchCes.Stop();
+            float ces = stopwatchCes.ElapsedMilliseconds;
+            Console.Write("-----------------------------------------------\n");
+            Console.Write("Время Виженера: " + vij + "\nВремя Цезаря: " + ces + "\n");
+            Console.Write("-----------------------------------------------\n");
+        }
     }
 }
