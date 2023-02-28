@@ -10,10 +10,10 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
 iris_dataset['data'], iris_dataset['target'], random_state=0)
 
-print("формамассива X_train: {}".format(X_train.shape))
-print("формамассива y_train: {}".format(y_train.shape))
-print("формамассива X_test: {}".format(X_test.shape))
-print("формамассива y_test: {}".format(y_test.shape))
+print("форма массива X_train: {}".format(X_train.shape))
+print("форма массива y_train: {}".format(y_train.shape))
+print("форма массива X_test: {}".format(X_test.shape))
+print("форма массива y_test: {}".format(y_test.shape))
 
 iris_dataframe = pds.DataFrame(X_train, columns=iris_dataset.feature_names)
 
@@ -28,7 +28,7 @@ knn = KNeighborsClassifier(n_neighbors=1)
 knn.fit(X_train, y_train)
 
 X_new = np.array([[5, 2.9, 1, 0.2]])
-print("формамассива X_new: {}".format(X_new.shape))
+print("форма массива X_new: {}".format(X_new.shape))
 
 prediction = knn.predict(X_new)
 print("Прогноз: {}".format(prediction))
