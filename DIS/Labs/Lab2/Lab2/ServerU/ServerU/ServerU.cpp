@@ -1,20 +1,33 @@
-// ClientU.cpp : Defines the entry point for the console application.
+// ServerU.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
-#include "Winsock2.h"
 #include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <string>
-#include <ctime>
-#include <wchar.h>
+#include "string.h"
+#include <locale>
+#include "time.h"
+#include "Winsock2.h"
+#include <queue>
 
 #pragma comment(lib, "WS2_32.lib")
 
-typedef HANDLE HDFS;
-
 using namespace std;
+
+class Link
+{
+public:
+	char* FileName;
+	char command;
+	bool UsingFile;
+	SOCKADDR_IN Adr;
+	HANDLE WaitEvent;
+	HANDLE Thread;
+};
+
+#define MAX_FILE 10
+Link* masthr[MAX_FILE];
+SOCKET sS;
+int lc;
 
 string GetErrorMsgText(int code)
 {
@@ -77,146 +90,143 @@ string GetErrorMsgText(int code)
 	case WSASYSCALLFAILURE:		 msgText = "Аварийное завершение системного вызова\n";		  break;
 	default:					 msgText = "Error\n";										  break;
 	};
+
 	return msgText;
 }
 
 string SetErrorMsgText(string msgText, int code)
 {
-	return msgText + GetErrorMsgText(code);
+	return  msgText + GetErrorMsgText(code);
 };
 
-SOCKET cS;
-SOCKADDR_IN serv;
-int len;
-char inBuf[30];
-bool EnterCA(char* FileName)
+
+
+
+DWORD WINAPI Dispath(LPVOID lp)
 {
-	string str("enter");
-	str.append(FileName);
-	int c = sendto(cS, str.c_str(), str.length(), NULL, (sockaddr*)&serv, len);
-
-	recvfrom(cS, inBuf, sizeof(inBuf), NULL, (sockaddr*)&serv, &len);
-
-	if (inBuf)
+	queue<SOCKADDR_IN>* q = new queue<SOCKADDR_IN>();
+	int index = (int)lp;
+	while (true)
 	{
-		return true;
-	}
-	return false;
-}
 
-bool LeaveCA(char* FileName)
-{
-	string str("leave");
-	str.append(FileName);
-	sendto(cS, str.c_str(), str.length(), NULL, (sockaddr*)&serv, len);
-	return true;
-}
+		WaitForSingleObject(masthr[index]->WaitEvent, INFINITE);
+		if (masthr[index]->command == 'e') {
+			if (q->empty())
+			{
+				char buf[5];
 
-HDFS OpenDFSFile(char* FileName, char* FileWay)
-{
-	if (EnterCA(FileName))
-	{
-		HANDLE ptrFile = CreateFileA(FileWay, GENERIC_READ | GENERIC_WRITE, NULL, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (ptrFile != NULL)
-		{
-			return ptrFile;
+				itoa((masthr[index]->Adr).sin_port, buf, 10);
+
+				sendto(sS, buf, sizeof(buf), NULL, (sockaddr*)&masthr[index]->Adr, lc);
+
+			}
+			q->push(masthr[index]->Adr);
 		}
-		return 0;
-	}
-	return 0;
-}
+		else if (masthr[index]->command == 'l') {
+			q->pop();
+			if (!q->empty()) {
+				cout << "lea" << endl;
 
-int ReadDFSFile(HDFS hdfs, void* buf, int bufsize)
-{
-	int s;
-	if (ReadFile(hdfs, buf, bufsize, (LPDWORD)&s, NULL))
-	{
-		return s;
+				SOCKADDR_IN sc = q->front();
+				sendto(sS, (char*)(masthr[index]->Adr).sin_port, sizeof((char*)(masthr[index]->Adr).sin_port), NULL, (sockaddr*)&sc, lc);
+			}
+		}
 	}
-	else return -1;
-}
-
-int WriteDFSFile(HDFS hdfs, void* buf, int bufsize)
-{
-	int s;
-	SetFilePointer(hdfs, NULL, NULL, FILE_END);
-	if (WriteFile(hdfs, buf, bufsize, (LPDWORD)&s, NULL))
-	{
-		FlushFileBuffers(hdfs);//сбросить буфер
-		return s;
-	}
-	else return -1;
-}
-
-void CloseDFSFile(HDFS hdfs, char* FileName)
-{
-	CloseHandle(hdfs);
-	LeaveCA(FileName);
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	setlocale(LC_CTYPE, "Russian");
+	setlocale(LC_ALL, "Russian");
 
-	string IP = "127.0.0.1";
-	time_t rawtime;
-	struct tm* timeinfo;
-
-
-	char buffer[80];                                // строка, в которой будет храниться текущее время
-	cout << "ClientU" << endl;
-
+	std::cout << "ServerU" << endl;
 	try
 	{
+		for (int i = 0; i < MAX_FILE; i++)
+		{
+			masthr[i] = NULL;
+		}
 		WSADATA wsaData;
 		if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
 			throw SetErrorMsgText("Startup: ", WSAGetLastError());
-		if ((cS = socket(AF_INET, SOCK_DGRAM, NULL)) == INVALID_SOCKET)
+		if ((sS = socket(AF_INET, SOCK_DGRAM, NULL)) == INVALID_SOCKET)
 			throw SetErrorMsgText("Socket: ", WSAGetLastError());
+		SOCKADDR_IN serv;
 		serv.sin_family = AF_INET;
 		serv.sin_port = htons(2000);
-		serv.sin_addr.s_addr = inet_addr(IP.c_str());
-		len = sizeof(serv);
+		serv.sin_addr.s_addr = inet_addr("192.168.43.1");
 
-		char buf[200];
-
+		if (bind(sS, (LPSOCKADDR)&serv, sizeof(serv)) == SOCKET_ERROR)
+			throw SetErrorMsgText("Bind_Server: ", WSAGetLastError());
 
 		while (true)
 		{
-			time(&rawtime);
-			timeinfo = localtime(&rawtime);
-			ZeroMemory(buffer, 80);
-			ZeroMemory(buf, 200);
-			strftime(buffer, 80, "%c", timeinfo);
-			HDFS h;
-			h = OpenDFSFile("111", "111.txt");
-			if (h)
+			SOCKADDR_IN client;
+			lc = sizeof(SOCKADDR_IN);
+			char ibuf[50];
+			ZeroMemory(ibuf, 50);
+			if ((recvfrom(sS, ibuf, sizeof(ibuf), NULL, (sockaddr*)&client, &lc)) == SOCKET_ERROR)
+				throw SetErrorMsgText("RecvFrom: ", WSAGetLastError());
+			int port = client.sin_port;
+			std::cout << "Client (" << inet_ntoa(client.sin_addr) << ":" << port << "): " << ibuf << endl;
+			bool create = true;
+			for (int i = 0; i < MAX_FILE; i++)
 			{
-				if (ReadDFSFile(h, buf, 10) > 0)
-					strcat(buffer, " ");
-
-				strcat(buffer, inBuf);
-				cout << "111: " << buffer << endl;
-
-				WriteDFSFile(h, buffer, strlen(buffer));
-				WriteDFSFile(h, "\r\n", strlen("\r\n"));
+				if (masthr[i] != NULL)
+				{
+					if (strcmp(ibuf + 5, masthr[i]->FileName) == 0)
+					{
+						create = false;
+						masthr[i]->command = ibuf[0];
+						masthr[i]->Adr = client;
+						SetEvent(masthr[i]->WaitEvent);
+						break;
+					}
+				}
 			}
-			else break;
-			CloseDFSFile(h, "111");
-			Sleep(5000);
+			if (create)
+			{
+				Link* a = new Link();
+				int pos = -1;
+				bool findplace = false;
+				for (int i = 0; i < MAX_FILE; i++)
+				{
+					if (masthr[i] == 0)
+					{
+						findplace = true;
+						pos = i;
+						masthr[i] = a;
+						break;
+					}
+				}
+
+				if (!findplace)
+				{
+					std::cout << "not create new thread" << endl;
+					break;
+				}
+				char* filename = new char[strlen(ibuf) - 5];
+				strcpy(filename, ibuf + 5);
+
+				a->FileName = filename;
+				a->command = ibuf[0];
+				a->Adr = client;
+				a->UsingFile = false;
+				a->WaitEvent = CreateEvent(NULL, false, true, NULL);
+				a->Thread = CreateThread(NULL, NULL, &Dispath, (void*)pos, NULL, NULL);
+				SetEvent(a->WaitEvent);
+			}
 		}
 
-
-		if (closesocket(cS) == SOCKET_ERROR)
-			throw SetErrorMsgText("Closesocket: ", WSAGetLastError());
-
+		if (closesocket(sS) == SOCKET_ERROR)
+			throw SetErrorMsgText("close socket: ", WSAGetLastError());
 		if (WSACleanup() == SOCKET_ERROR)
 			throw SetErrorMsgText("Cleanup: ", WSAGetLastError());
 	}
 	catch (string errorMsgText)
 	{
-		cout << endl << errorMsgText << endl;
+		std::cout << endl << errorMsgText;
 	}
-	cout << endl;
+
 	return 0;
 }
+
