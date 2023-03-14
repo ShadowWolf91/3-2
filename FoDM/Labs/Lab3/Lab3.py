@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 
+import warnings
+from sklearn.datasets import load_boston
+warnings.filterwarnings("ignore")
+
 X, y = mglearn.datasets.make_forge()
 mglearn.discrete_scatter(X[:, 0], X[:, 1], y)
 plt.legend(["Класс 0", "Класс 1"], loc=4)

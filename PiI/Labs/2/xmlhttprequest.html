@@ -23,20 +23,14 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState != 4) return;
 
-        //button.innerHTML = 'Готово!';
-
         if (xhr.status != 200) {
-          // обработать ошибку
           body.innerHTML = (xhr.status + ': ' + xhr.statusText);
         } else {
-          // вывести результат
           body.innerHTML = (xhr.responseText);
         }
 
       }
 
-      //button.innerHTML = 'Загружаю...';
-      //button.disabled = true;
       button.style.visibility = "hidden";
     }
   </script>
