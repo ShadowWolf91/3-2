@@ -6,19 +6,18 @@ import warnings
 from sklearn.datasets import load_boston
 warnings.filterwarnings("ignore")
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression 
 from sklearn.svm import LinearSVC
 X, y = mglearn.datasets.make_forge()
 fig, axes = plt.subplots(1, 2, figsize=(10, 3))
 
 for model, ax in zip([LinearSVC(), LogisticRegression()], axes):
     clf = model.fit(X, y)
-mglearn.plots.plot_2d_separator(clf, X, fill=False, eps=0.5,
-                                ax=ax, alpha=.7)
-mglearn.discrete_scatter(X[:, 0], X[:, 1], y, ax=ax)
-ax.set_title("{}".format(clf.__class__.__name__))
-ax.set_xlabel("Признак 0")
-ax.set_ylabel("Признак 1")
+    mglearn.plots.plot_2d_separator(clf, X, fill=False, eps=0.5, ax=ax, alpha=.7)
+    mglearn.discrete_scatter(X[:, 0], X[:, 1], y, ax=ax)
+    ax.set_title("{}".format(clf.__class__.__name__))
+    ax.set_xlabel("Признак 0")
+    ax.set_ylabel("Признак 1")
 axes[0].legend()
 plt.show()
 
@@ -54,10 +53,8 @@ plt.show()
 
 for C, marker in zip([0.001, 1, 100], ['o', '^', 'v']):
     lr_l1 = LogisticRegression(C=C, penalty="l2").fit(X_train, y_train)
-    print("Правильность на обучении для логрегрессии l1 с C={:.3f}: {:.2f}".format( C,
-                                                                                    lr_l1.score(X_train, y_train)))
-    print("Правильность на тесте для логрегрессии l1 с C={:.3f}: {:.2f}".format( C,
-                                                                                 lr_l1.score(X_test, y_test)))
+    print("Правильность на обучении для логрегрессии l1 с C={:.3f}: {:.2f}".format( C, lr_l1.score(X_train, y_train)))
+    print("Правильность на тесте для логрегрессии l1 с C={:.3f}: {:.2f}".format( C, lr_l1.score(X_test, y_test)))
     
     plt.plot(lr_l1.coef_.T, marker, label="C={:.3f}".format(C))
     plt.xticks(range(cancer.data.shape[1]), cancer.feature_names, rotation=90)
