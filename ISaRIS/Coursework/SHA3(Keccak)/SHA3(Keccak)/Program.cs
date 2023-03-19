@@ -243,7 +243,7 @@ class Program
         //if (args.Length < 1)
            // return;
         List<Byte> MessageB;
-        String message = string.Copy("sdfdsf");
+        String message = string.Copy("Let's Encrypt!");
 
         MessageB = strToByteList(message);
         String hash_224 = ByteArrayToString(Keccak(rate_array[(Byte)SHA3.SHA224], capacity_array[(Byte)SHA3.SHA224], MessageB));
