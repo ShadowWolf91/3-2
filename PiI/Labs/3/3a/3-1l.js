@@ -1,25 +1,44 @@
-let http = require('http');
-let url = require("url");
-let fs = require('fs');
-var state = '<h1>NORM<h1>';
-const server = http.createServer;
-
-
-server((req,res)=>
-{
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end(state);
-}).listen(5000, 'localhost', ()=>{console.log('Server start at 5000 port');
-});
-
-process.stdin.setEncoding('utf-8');
-process.stdin.on('readable', ()=> {
-    let chunk = null;
-    while ((chunk = process.stdin.read()) != null) {
-        if (chunk.trim() === 'exit') process.exit(0);
-        else if (chunk.trim() === 'norm' || chunk.trim() === 'test' || chunk.trim() === 'stop' || chunk.trim() === 'idle') {
-            state = '<h1>' + chunk.trim().toUpperCase() + '<h1>';
-            process.stdout.write(chunk.trim() + '->');
-        } else process.stdout.write('Unknown command: ' + chunk.trim() + '\n');
-    }
-});
+const id = "127.0.0.1"; 
+const port = 5000; 
+ 
+const http = require("http"); 
+const readline = require('readline'); 
+ 
+let text = "<h1>norm</h1>"; 
+let state = "norm"; 
+let oldstate = ""; 
+ 
+const server = http.createServer((request, response) => { 
+    response.writeHead(200, {'Content-Type': 'text/html'}); 
+    response.write(text); 
+    response.end(); 
+}); 
+ 
+server.listen(port, id, function () { 
+ 
+}); 
+ 
+const rl = readline.createInterface({ 
+    input: process.stdin, 
+    output: process.stdout 
+}); 
+ 
+const handleInput = (command) => { 
+    if (command.trim() === 'exit') { 
+        process.exit(0); 
+        return; 
+    } else if (command.trim() === 'norm' || command.trim() === 'test' ||  command.trim() === 'stop' || command.trim() === 'idle') { 
+        oldstate = state; 
+        state = command.trim(); 
+        text = '<h1>' + state + '<h1>'; 
+        console.log(`reg = ${oldstate} --> ${state}`); 
+    } else { 
+        console.log('Неизвестная команда: ' + command.trim()); 
+    } 
+    rl.setPrompt(`${state} --> `); 
+    rl.prompt(); 
+} 
+rl.setPrompt(` ${state} --> `); 
+rl.prompt(); 
+ 
+rl.on('line', handleInput);
