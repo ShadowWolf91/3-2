@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Form</h1>
+    <div id="get_result"></div>
+    <script>
+        function Get()
+        {
+            element = document.getElementById('get_result');
+
+            element.textContent = "";
+            console.log('GET');
+
+            fetch('http://localhost:5000/api/db', 
+            {
+                method: 'GET', mode: 'no-cors',
+                headers: {'Content-type' : 'application/json', 'Accept':'application/json'}
+            })
+            .then(responce => { return responce.json(); })
+            .then((pdata) =>
+            {
+                console.log('pdata', pdata);
+                pdata.forEach(el => 
+                {
+                    element.innerHTML += "<div id='get_result'>" + (el.id + ". " + el.name + " " + el.bday + " ") + "</div>";
+                })
+                console.log(element.textContent);
+            });
+        }
+
+        function Post()
+        {
+            console.log('POST');
+        
+            fetch('http://localhost:5000/api/db', 
+            {
+                method: 'POST', mode: 'no-cors',
+                headers: {'Content-Type':'application/json','Accept':'application/json'},
+                body: JSON.stringify({id:ID.value, name:Name.value, bday:BDay.value })
+            })
+            .then(response => { return response.json(); })
+            .then((pdata) => {alert("Вставлено успешно: " + pdata.id + " " + pdata.name + " " + pdata.bday) },
+            (err) => alert("Нарушение целостности первичного ключа (id)"));
+        }
+
+        function Put()
+        {
+            console.log('PUT');
+        
+            fetch('http://localhost:5000/api/db',
+            {
+                method: 'PUT', 
+                headers: {'Content-Type':'application/json','Accept':'application/json'},
+                body: JSON.stringify({id:ID_PUT.value, name:Name_PUT.value, bday:BDay_PUT.value })
+            })
+            .then(response => { return response.json(); })
+            .then((pdata) => {console.log("PUT.pdata", pdata); alert("успешно обновлено: " + pdata.id + " " + pdata.name + " " + pdata.bday)},
+            (err) => alert("элемента с таким id не существует"));
+        }
+
+        function Delete()
+        {
+            console.log('DELETE');
+        
+            fetch('http://localhost:5000/api/db?' + new URLSearchParams({id: ID_DEL.value}), 
+            {
+                method: 'DELETE',
+                headers: {'Content-Type':'application/json','Accept':'application/json'}
+            })
+            .then(response => { return response.json(); })
+            .then((pdata) => {console.log("POST.pdata", pdata); alert("успешно удалено: " + pdata.id + " " + pdata.name + " " + pdata.bday)},
+            (err) => alert("элемента с таким id не существует"));
+        }
+    </script>
+
+<br>
+<div style="text-align: center;">
+    <button id="btn_get" onclick="Get()">GET</button>
+    <div style="padding: 20px">
+        <div class="row">
+            <label class="col-2">Идентификатор</label>
+            <input type="number" class="col-3" id="ID" min="0" />
+        </div>
+        <div class="row">
+            <label class="col-2">ФИО</label>
+            <input type="text" class="col-3" id="Name"/>
+        </div>
+        <div class="row">
+            <label class="col-2">Дата рождения</label>
+            <input type="date" class="col-3" id="BDay"/>
+        </div>
+        <div class="row">
+            <button class="col-2" onclick="Post()">POST</button>
+        </div>
+    </div>
+    
+    <br>
+    <div style="padding: 20px">
+        <div class="row">
+            <label class="col-2">Идентификатор</label>
+            <input type="number" class="col-3" id="ID_PUT" min="0" />
+        </div>
+        <div class="row">
+            <label class="col-2">ФИО</label>
+            <input type="text" class="col-3" id="Name_PUT"/>
+        </div>
+        <div class="row">
+            <label class="col-2">Дата рождения</label>
+            <input type="date" class="col-3" id="BDay_PUT"/>
+        </div>
+        <div class="row">
+            <button class="col-2" onclick="Put()">PUT</button>
+        </div>
+    </div>
+     
+    <div style="padding: 20px">
+        <div class="row">
+            <label class="col-2">Идентификатор</label>
+            <input type="number" class="col-3" id="ID_DEL" min="0" />
+        </div>
+        <div class="row">
+            <button class="col-2" onclick="Delete()">DELETE</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
