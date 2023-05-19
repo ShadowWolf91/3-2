@@ -1,23 +1,8 @@
 {
   "dependencies": {
-    "laba5xnext": "^1.0.0",
-    "maxpackage": "^1.0.0",
-    "nodemailer": "^6.9.1"
-  },
-  "name": "laba5xnext",
-  "version": "1.0.0",
-  "main": "m0603.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "xnext",
-  "license": "ISC",
-  "description": "qwerty",
-  "repository": {
-    "type": "git",
-    "url": "none"
-  },
-  "keywords": [
-    "none"
-  ]
+    "m0603hah": "^1.0.0",
+    "nodemailer": "^6.9.1",
+    "nodemailer-smtp-transport": "^2.4.2",
+    "qs": "^6.11.1"
+  }
 }

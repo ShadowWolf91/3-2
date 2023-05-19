@@ -1,73 +1,80 @@
-// Информация о пакете
-// npm view nodemailer;
-// npm info nodemailer;
+const id = "127.0.0.1";
+const port = 5000;
+const path = "./06-02.html"
 
-// Установка пакета 
-// npm install nodemailer; - локально
-// npm install -g nodemailer - глобально
-
-// Проверка установлен ли пакет
-// npm -v nodemailer 
-// Проверить зависимости в package.json
-
-const {mailF} = require("./m0603");
 const http = require("http");
 const fs = require("fs");
+const url = require("url");
 
+const nodemailer = require("nodemailer");
+const nodemailer_smtp_transport = require("nodemailer-smtp-transport");
 
-const nodeMailer = require("nodemailer");
+const { parse } = require("qs");
 
-function Mail(from, to, message) {
-
-    let transporter = nodeMailer.createTransport({
-        host: 'smtp.mail.ru',
-        port: 465,
-        secure: true,
-        auth: {
-            user: from,
-            pass: 'bcGf3pLnbNr0tuHbiYdY'
-        }
-    });
-
-
-    let mailOptions = {
-        from: from,
-        to: to,
-        subject: 'Пересылка',
-        text: message,
-
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-        res.render('index');
-    });
-}
-//transporter, который создает SMTP-транспорт для отправки почты
-
-let block;
-http.createServer((req, res) => {
-    let data = fs.readFileSync("index.html", 'utf-8');
-    if (req.url == "/") {
-        res.end(data);
+const server = http.createServer((request,response) => {
+    response.writeHead(200, {'Content-Type':'text/html; charset=utf-8'});
+    if (url.parse(request.url).pathname == '/' && request.method == 'GET')
+    {
+        response.write(fs.readFileSync(path));
+        response.end();
     }
-    if (req.method == "POST") {
-        if (req.url == '/send-email') {
+    else if (url.parse(request.url).pathname == '/' && request.method == 'POST')
+    {
+        let body = '';
+        request.on('data', chunk => {body += chunk.toString();});
+        request.on('end', () =>
+        {
+            let parm = parse(body);
+            
+            let sender = parm.sender;
+            let pass = parm.password;
+            let reciever = parm.reciver;
+            let subject = parm.subject;
+            let message = parm.message;
 
-            req.on('data', (data) => {
-                block = JSON.parse(data);
-                from = block.from;
-                to = block.toOne;
-                mesage = block.message;
-                Mail(from, to, mesage);
-            });
-        }
+            send(sender, pass, reciever, subject, message);
+            
+            response.end(`<h1> OK <br> кому: ${reciever} <br> от кого: ${sender} <br> тема: ${subject} <br> сообщение: ${message} </h1>`);  
+        })
     }
-}).listen(5000, '127.0.0.1', () => {
-    console.log("Сервер запущен!");
+    else 
+    {
+        response.end(`<h1> Not support </h1>`);
+    }
 });
 
- 
+server.listen(port, id,function(){
+    console.log("Прослушивание запросов началось");
+});
+
+function send(sender, pass, reciever, subject, message)
+{
+        const transporter = nodemailer.createTransport(nodemailer_smtp_transport(
+            {
+                host: "Smtp.gmail.com",
+                port: 465,
+                secure: true, // false with port 587 or 25
+                auth:
+                {
+                    user: sender,
+                    pass: pass
+                }
+            }
+        ));
+
+        var mailOptions = {
+            from: sender,
+            to: reciever,
+            subject: subject,
+            text: message            
+        }
+
+        transporter.sendMail(mailOptions)
+        .then((value) =>
+        {
+            console.log ('email sent')
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+}
