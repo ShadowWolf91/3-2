@@ -1,0 +1,5 @@
+WATCH Ver=2.00 PLCName=STEP2 CPUName=CPU TaskName=ctask1 
+Position X=0 Y=0 Width=0 Height=0 TabWidth Name=200 Type=100 Scope=60 Force=60 Index=0 ASCIIString=0
+                                    name                                     type force                                                            value level type len format place expand specs
+                             LEDFunction                                    USINT    0 "                                                               3"    0    5    1   10    0    0         
+                                 counter                                    USINT    0 "                                                               1"    0    5    1   10    0    0         

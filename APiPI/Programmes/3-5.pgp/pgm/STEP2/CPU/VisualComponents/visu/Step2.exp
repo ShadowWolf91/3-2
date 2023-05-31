@@ -1,0 +1,10 @@
+[visu]
+TargetType=m68k
+TargetName=4P3040.00-490
+TargetCANParameter=
+TargetSERParameter=
+TouchInterface=IF2
+HwcFileName=4P304000490dis.hwc
+ControllerHwcFileName=
+VCVersion=
+Editor=1.4.5.12

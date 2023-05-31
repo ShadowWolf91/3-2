@@ -216,7 +216,7 @@ setInterval(() => {
   console.log('Find servers');
   const params = JSON.stringify({ command: Commands.hello });
 
-  server.send(params, 0, params.length, 5555, '192.168.43.255', (error) => {
+  server.send(params, 0, params.length, 5555, '192.168.18.153', (error) => {
     if (error) {
       console.log(`Sent broadcast error`);
     }

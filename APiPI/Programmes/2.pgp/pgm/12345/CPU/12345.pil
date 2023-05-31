@@ -1,0 +1,28 @@
+Connection "/IF=COM9 /BD=57600 /PA=2 /IT=1", ""
+Diagnose
+DeleteMemory FIXRAM
+DeleteMemory ROM
+DeleteMemory MEMCARD
+Coldstart
+Download: ".\System\PP00_V24.BIN", "ROM"
+Coldstart
+Download: ".\sysconf.br", "SYSROM"
+Coldstart
+Download: ".\PP41000.br", "ROM"
+Coldstart
+Download: ".\burtrap.br", "ROM"
+Download: ".\rtk68k.br", "ROM"
+Download: ".\runtime.br", "ROM"
+Download: ".\gcloader.br", "ROM"
+Download: ".\sys_lib.br", "ROM"
+Download: ".\aplib.br", "ROM"
+Download: ".\visu02.br", "ROM"
+Download: ".\visu01.br", "ROM"
+Download: ".\visio02.br", "ROM"
+Download: ".\visio01.br", "ROM"
+Download: ".\DataObj.br", "ROM"
+Download: ".\panel01.br", "ROM"
+Download: ".\panel02.br", "ROM"
+Download: ".\panel.br", "ROM"
+Download: ".\cyclic1.br", "RAM"
+Download: ".\task1.br", "RAM"
