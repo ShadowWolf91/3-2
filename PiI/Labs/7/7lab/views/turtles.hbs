@@ -1,0 +1,37 @@
+<h1>Список черепашек</h1>
+
+{{#if result.length}}
+
+<ul>
+{{#each result}}
+    <li>
+        <span>{{dataValues.turtles_id}}</span>
+        <span>{{dataValues.turtles_name}}</span>
+        <span>{{dataValues.turtles_color}}</span>
+        <span>{{dataValues.weapon.dataValues.weapons_name}}</span>
+        <span>{{dataValues.weapon.dataValues.weapons_dps}}</span>
+        <span>{{dataValues.first.dataValues.pizzas_name}}</span>
+        <span>{{dataValues.first.dataValues.pizzas_calories}}</span>
+        <span>{{dataValues.first.dataValues.pizzas_description}}</span>
+        <span>{{dataValues.second.dataValues.pizzas_name}}</span>
+        <span>{{dataValues.second.dataValues.pizzas_calories}}</span>
+        <span>{{dataValues.second.dataValues.pizzas_description}}</span>
+        <img src="/images/{{dataValues.turtles_image}}" width="40px">
+    </li>
+{{/each}}
+
+</ul>
+{{else}}
+<p> Черепашек нет!</p>
+{{/if}}
+
+
+{{#if favoritePizza}}
+    <a href="?page={{prevPage}}&favoritePizza={{favoritePizza}}">Предыдущая</a>
+    <span>{{currentPage}}</span>
+    <a href="?page={{nextPage}}&favoritePizza={{favoritePizza}}">Следующая</a>
+{{else}}
+    <a href="?page={{prevPage}}">Предыдущая</a>
+    <span>{{currentPage}}</span>
+    <a href="?page={{nextPage}}">Следующая</a>
+{{/if}}
