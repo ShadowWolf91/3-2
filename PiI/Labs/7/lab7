@@ -1,0 +1,381 @@
+{
+	"info": {
+		"_postman_id": "4f8eb104-080a-462a-b8e3-0075ea68c334",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25784105"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/api/turtles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/turtles",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/2",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles?favoritePizza=mozarello",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turtles_name\": \"Artem\",\r\n    \"turtles_color\": \"white\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turtles_id\": 5,\r\n    \"turtles_name\": \"Egor\",\r\n    \"turtles_color\": \"white\",\r\n    \"turtles_image\": \"rafael.jpg\",\r\n    \"turtles_favoritepizzaid\": 3,\r\n    \"turtles_secondfavoritepizzaid\": 2,\r\n    \"turtles_weaponid\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/favoritePizzaBind",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turtles_id\": 3,\r\n    \"turtles_name\": \"Artem\",\r\n    \"turtles_color\": \"black\",\r\n    \"turtles_image\": \"rafael.jpg\",\r\n    \"turtles_favoritepizzaid\": 2,\r\n    \"turtles_secondfavoritepizzaid\": 3,\r\n    \"turtles_weaponid\": 2\r\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles/favoritePizzaBind",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles",
+						"favoritePizzaBind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/secondFavoritePizzaBind",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turtles_id\": 3,\r\n    \"turtles_name\": \"Artem\",\r\n    \"turtles_color\": \"black\",\r\n    \"turtles_image\": \"rafael.jpg\",\r\n    \"turtles_favoritepizzaid\": 2,\r\n    \"turtles_secondfavoritepizzaid\": 3,\r\n    \"turtles_weaponid\": 2\r\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles/secondFavoritePizzaBind",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles",
+						"secondFavoritePizzaBind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/weaponBind",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"turtles_id\": 5,\r\n   \"turtles_weaponid\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles/weaponBind",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles",
+						"weaponBind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/favoritePizzaUnbind",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turtles_id\":3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/turtles/favoritePizzaUnbind",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"turtles",
+						"favoritePizzaUnbind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/secondFavoritePizzaUnbind",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles/weaponUnbind",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/turtles",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons/id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons?dps=gt n",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/weapons?dps=gt 300",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"weapons"
+					],
+					"query": [
+						{
+							"key": "dps",
+							"value": "gt 300"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons?dps=lt n",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"weapons_name\": \"katana\",\r\n    \"weapons_dps\": 200\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons",
+			"request": {
+				"method": "PUT",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/weapons",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas/id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/pizzas/5",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"pizzas",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas?calories=gt m",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas?calories=lt m",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas",
+			"request": {
+				"method": "PUT",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/pizzas",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

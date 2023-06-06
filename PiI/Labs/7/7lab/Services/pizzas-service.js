@@ -21,7 +21,7 @@ async function CheckTran() {
   });
 }
 
-// CheckTran();
+CheckTran();
 
 async function FindPizzas(calories) {
   if (calories) {

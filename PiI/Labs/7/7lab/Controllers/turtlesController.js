@@ -30,9 +30,11 @@ exports.getPhoto = async (req, res) => {
   const formData = JSON.parse(JSON.stringify(req.body));
   const name = formData.name;
   console.log('Name:', name);
+  let id = parseInt(name);
+  if(isNaN(id)) return res.status(404).send({ message: 'ID must be integer' })
   var statusCode = await turtlesService.FindTurtleById(Number(name));
   if (statusCode.status === 404){
-    res.send({ message : 'turtle does not exiss'})
+    res.send({ message : 'turtle does not exist'})
   }
   else{
   res.send({ message: 'Normal file' });

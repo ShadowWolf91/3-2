@@ -6,10 +6,10 @@ const basename = path.basename(__filename);
 
 const db = {};
 
-const sequelize = new Sequelize('AOV', 'sa', 'aurum123ILIKE', {
+const sequelize = new Sequelize('postgres', 'postgres', '1', {
   host: 'localhost',
-  dialect: 'mssql',
-  port: '1433',
+  dialect: 'postgres',
+  port: '5432',
   pool: {
     max: 10,
     min: 0,
@@ -22,6 +22,7 @@ fs.readdirSync(__dirname)
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
+    console.log(__dirname + file);
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });

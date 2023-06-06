@@ -78,20 +78,29 @@
             flex-direction: column;
         }
     </style>
+  
 </head>
 <body>
 	<h1>Добавить изображение черепашке</h1>
     <form action="/api/turtles/upload" method="post" enctype="multipart/form-data" >
     <div class="container">
 
-        <input class='text' type="text" name="name">
+        <input class='text' type="text" id="id" name="name" required>
         <label class="input-file">
-        <input type="file" name="image">
+        <input type="file" name="image" required>
         <span class="input-file-btn">Выберите файл</span>           
     </label>
         
     <button class="button" type="submit">Отправить</button>
     </div>
     </form>
+      <script>
+        let regex = new RegExp("^[0-9]*$");
+        let state="";
+        document.getElementById("id").addEventListener('input',(e)=>{
+            if(!regex.test(e.target.value)) return e.target.value = state;
+            state=e.target.value;
+        })
+    </script>
 </body>
 </html>

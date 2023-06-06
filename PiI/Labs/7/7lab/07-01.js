@@ -6,7 +6,7 @@ const PORT = 3000;
 const app = Express();
 
 app.use('/images', Express.static(__dirname + "/images"))
-app.use(bodyParser.urlencoded({ extended: true }));//для разбора и обработки данных, отправленных с помощью POST и PUT запросов в форматах URL-encoded и JSON.
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const pizzasRouter = require("./Routes/pizzasRouter.js");
