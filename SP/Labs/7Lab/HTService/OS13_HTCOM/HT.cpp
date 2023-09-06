@@ -811,7 +811,7 @@ BOOL HT::CheckCurrentUser(HTHANDLE* ht, const wchar_t UserName[512], const wchar
 			{
 				count++;
 			}
-			if(L"Администраторы" == std::wstring(buf3[i].grui0_name))
+			if(L"Administrators" == std::wstring(buf3[i].grui0_name))
 			{
 				count++;
 			}
